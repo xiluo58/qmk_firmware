@@ -1,3 +1,6 @@
+/*
+ * Link: https://configure.ergodox-ez.com/layouts/mORP/latest/0
+ */
 #include QMK_KEYBOARD_H
 #include "debug.h"
 #include "action_layer.h"
