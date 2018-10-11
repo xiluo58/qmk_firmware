@@ -8,15 +8,17 @@
 
 #define BASE 0 // default layer
 #define SYMB 1 // symbols
-#define MAGIC 2 // layer of bootmagic
+#define IDEA 2 // idea shortcuts (based on windows shortcuts)
+#define MAGIC 3 // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
 
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   EPRM,
   VRSN,
   SOURCE,
-  RGB_SLD,
-
+  // idea shortcuts
+  SEARCH_EVERYWHERE,
+  NB_FOLDER,
 };
 
 /*
@@ -50,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       CTL_T(KC_ESCAPE) , KC_A    , KC_S            , KC_D         , KC_F           , KC_G ,
       KC_LSPO          , KC_Z    , KC_X            , KC_C         , KC_V           , KC_B , KC_MINUS    ,
       MO(SYMB)         , KC_LEFT , ALT_T(KC_RIGHT) , GUI_T(KC_UP) , MEH_T(KC_DOWN) ,
-      MO(MAGIC),	TG(SYMB),
+      OSL(IDEA), MO(MAGIC),
       KC_PGUP,
       KC_ENTER,	KC_LSHIFT,	KC_PGDOWN,
       // right hand
@@ -61,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RCTRL , MO(SYMB)  ,
       KC_LEFT,KC_RIGHT,
       KC_UP,
-      KC_DOWN,KC_DELETE,KC_SPACE
+      KC_DOWN,KC_DELETE, OSL(IDEA)
       ),
 
       [SYMB] = LAYOUT_ergodox(
@@ -85,11 +87,46 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
           KC_TRNS, _______, _______
           ),
 
+      /*
+        MAGIC_HOST_NKRO   Force N-Key Rollover (NKRO) on
+        MAGIC_UNHOST_NKRO   Force NKRO off
+        MAGIC_TOGGLE_NKRO   Turn NKRO on or off
+        MAGIC_NO_GUI    Disable the GUI keys (useful when gaming)
+        MAGIC_UNNO_GUI    Enable the GUI keys
+        MAGIC_SWAP_ALT_GUI  AG_SWAP Swap Alt and GUI on both sides (for macOS)
+        MAGIC_UNSWAP_ALT_GUI  AG_NORM Unswap Left Alt and Left GUI
+        MAGIC_TOGGLE_ALT_GUI  AG_TOGG Toggle Left Alt and GUI swap
+        MAGIC_SWAP_LALT_LGUI    Swap Left Alt and Left GUI
+        MAGIC_UNSWAP_LALT_LGUI    Unswap Left Alt and Left GUI
+        MAGIC_SWAP_RALT_RGUI    Swap Right Alt and Right GUI
+        MAGIC_UNSWAP_RALT_RGUI    Unswap Right Alt and Right GUI
+      */
+
       [MAGIC] = LAYOUT_ergodox(
-             AG_SWAP, AG_NORM, AG_TOGG, _______, _______, _______, _______,
+             _______ , MAGIC_HOST_NKRO      , MAGIC_UNHOST_NKRO      , MAGIC_TOGGLE_NKRO    , MAGIC_NO_GUI           , MAGIC_UNNO_GUI , _______ ,
+             _______ , MAGIC_SWAP_ALT_GUI   , MAGIC_UNSWAP_ALT_GUI   , MAGIC_TOGGLE_ALT_GUI , _______                , _______        , _______ ,
+             _______ , MAGIC_SWAP_LALT_LGUI , MAGIC_UNSWAP_LALT_LGUI , MAGIC_SWAP_RALT_RGUI , MAGIC_UNSWAP_RALT_RGUI , _______        ,
+             _______ , _______              , _______                , _______              , _______                , _______        , _______ ,
+             _______ , _______              , _______                , _______              , _______                ,
+                                                 _______, _______,
+                                                          _______,
+                                        _______, _______, _______,
+          // right hand
+             _______,  _______, _______, _______, _______, _______, _______,
+             _______,  _______, _______, _______, _______, _______, _______,
+                       _______, _______, _______, _______, _______, _______,
+             _______,  _______, _______, _______, _______, _______, _______,
+                                _______, _______, _______, _______, _______,
+             _______, _______,
+             _______,
+             _______, _______, _______
+      ),
+
+      [IDEA] = LAYOUT_ergodox(
              _______, _______, _______, _______, _______, _______, _______,
-             _______, _______, _______, _______, _______, _______,
              _______, _______, _______, _______, _______, _______, _______,
+             _______, _______, _______, _______, NB_FOLDER, _______,
+             _______, _______, _______, _______, _______, _______, SEARCH_EVERYWHERE,
              _______, _______, _______, _______, _______,
                                                  _______, _______,
                                                           _______,
@@ -147,13 +184,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
-    case RGB_SLD:
+    // IDEA shortcuts
+    case SEARCH_EVERYWHERE:
       if (record->event.pressed) {
-        rgblight_mode(1);
+        SEND_STRING (SS_TAP(X_LSHIFT)SS_TAP(X_LSHIFT));
       }
       return false;
       break;
-
+    case NB_FOLDER:
+      if (record->event.pressed) {
+        SEND_STRING (SS_DOWN(X_LALT)SS_TAP(X_HOME)SS_UP(X_LALT));
+        _delay_ms(50);
+        SEND_STRING (SS_TAP(X_DOWN));
+      }
+      return false;
+      break;
   }
   return true;
 }
