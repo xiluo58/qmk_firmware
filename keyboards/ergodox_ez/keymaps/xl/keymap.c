@@ -11,6 +11,9 @@
 #define IDEA 2 // idea shortcuts (based on windows shortcuts)
 #define MAGIC 3 // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
 
+#define MACRO_DELAY _delay_ms(50)
+#define SHORT_DELAY _delay_ms(10)
+
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   EPRM,
@@ -18,7 +21,8 @@ enum custom_keycodes {
   SOURCE,
   // idea shortcuts
   SEARCH_EVERYWHERE,
-  NB_FOLDER,
+  NB_FOLDER, // open folder of current file in navigation bar
+  NB_VS, // in navigation bar, open file under cursor in vertical split window
 };
 
 /*
@@ -54,11 +58,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       MO(SYMB)         , KC_LEFT , ALT_T(KC_RIGHT) , GUI_T(KC_UP) , MEH_T(KC_DOWN) ,
       OSL(IDEA), MO(MAGIC),
       KC_PGUP,
-      KC_ENTER,	KC_LSHIFT,	KC_PGDOWN,
+      KC_ENTER,	KC_LEAD,	KC_PGDOWN,
       // right hand
       KC_END      , KC_6             , KC_7    , KC_8     , KC_9      , KC_0     , KC_BSPACE ,
       KC_RBRACKET , KC_Y             , KC_U    , KC_I     , KC_O      , KC_P     , KC_BSLASH ,
-      KC_H        , KC_J             , KC_K    , KC_L     , KC_SCOLON , KC_QUOTE ,
+      KC_H        , KC_J             , KC_K    , KC_L     , KC_SCOLON , LT(IDEA, KC_QUOTE) ,
       KC_EQUAL    , KC_N             , KC_M    , KC_COMMA , KC_DOT    , KC_SLASH , KC_RSPC   ,
       KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RCTRL , MO(SYMB)  ,
       KC_LEFT,KC_RIGHT,
@@ -123,11 +127,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       ),
 
       [IDEA] = LAYOUT_ergodox(
-             _______, _______, _______, _______, _______, _______, _______,
-             _______, _______, _______, _______, _______, _______, _______,
-             _______, _______, _______, _______, NB_FOLDER, _______,
-             _______, _______, _______, _______, _______, _______, SEARCH_EVERYWHERE,
-             _______, _______, _______, _______, _______,
+             _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
+             _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
+             _______ , _______ , NB_VS   , _______ , NB_FOLDER , _______ ,
+             _______ , _______ , _______ , _______ , _______   , _______ , SEARCH_EVERYWHERE ,
+             _______ , _______ , _______ , _______ , _______   ,
                                                  _______, _______,
                                                           _______,
                                         _______, _______, _______,
@@ -163,6 +167,48 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 void matrix_init_user(void) {
 };
 
+// idea shortcuts that opens the folder of current file in navigation bar
+void open_current_folder(void) {
+  SEND_STRING (SS_DOWN(X_LALT)SS_TAP(X_HOME)SS_UP(X_LALT));
+  _delay_ms(50);
+  SEND_STRING (SS_TAP(X_DOWN));
+}
+
+void copy_relative_path(void) {
+  SEND_STRING(SS_LCTRL(SS_LALT(SS_LSFT("c"))));
+}
+
+// open file, file path is copied to clipboard
+void open_file_clipboard(void) {
+  MACRO_DELAY;
+  SEND_STRING(":e "SS_LCTRL("v")SS_TAP(X_ENTER));
+}
+
+// navigation bar is opened, a file is under cursor, open the file in vertical split window
+void vs_file(void) {
+  copy_relative_path();
+  MACRO_DELAY;
+  SEND_STRING(SS_TAP(X_ESCAPE));
+  SHORT_DELAY;
+  SEND_STRING(SS_LCTRL("h"));
+  open_file_clipboard();
+}
+
+// Leader key
+LEADER_EXTERNS();
+
+void matrix_scan_user(void) {
+  LEADER_DICTIONARY() {
+    leading = false;
+    leader_end();
+
+    SEQ_ONE_KEY(KC_S) {
+      vs_file();
+    }
+  }
+}
+
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     // dynamically generate these.
@@ -193,9 +239,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case NB_FOLDER:
       if (record->event.pressed) {
-        SEND_STRING (SS_DOWN(X_LALT)SS_TAP(X_HOME)SS_UP(X_LALT));
-        _delay_ms(50);
-        SEND_STRING (SS_TAP(X_DOWN));
+        open_current_folder();
+      }
+      return false;
+      break;
+    case NB_VS:
+      if (record->event.pressed) {
+        vs_file();
       }
       return false;
       break;
