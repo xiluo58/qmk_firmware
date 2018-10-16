@@ -181,7 +181,13 @@ void copy_relative_path(void) {
 // open file, file path is copied to clipboard
 void open_file_clipboard(void) {
   MACRO_DELAY;
-  SEND_STRING(":e "SS_LCTRL("v")SS_TAP(X_ENTER));
+  SEND_STRING(":");
+  MACRO_DELAY;
+  SEND_STRING("e ");
+  MACRO_DELAY;
+  SEND_STRING(SS_LCTRL("v"));
+  MACRO_DELAY;
+  SEND_STRING(SS_TAP(X_ENTER));
 }
 
 // navigation bar is opened, a file is under cursor, open the file in vertical split window
@@ -189,7 +195,7 @@ void vs_file(void) {
   copy_relative_path();
   MACRO_DELAY;
   SEND_STRING(SS_TAP(X_ESCAPE));
-  SHORT_DELAY;
+  MACRO_DELAY;
   SEND_STRING(SS_LCTRL("h"));
   open_file_clipboard();
 }
