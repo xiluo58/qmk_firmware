@@ -23,6 +23,12 @@ enum custom_keycodes {
   SEARCH_EVERYWHERE,
   NB_FOLDER, // open folder of current file in navigation bar
   NB_VS, // in navigation bar, open file under cursor in vertical split window
+  NB_HTML,
+  NB_STYLE,
+  NB_SPEC,
+  NB_TS,
+  RUN_TASK,
+  HIDE_ALL,
 };
 
 /*
@@ -129,14 +135,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       [IDEA] = LAYOUT_ergodox(
              _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
              _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
-             _______ , _______ , NB_VS   , _______ , NB_FOLDER , _______ ,
-             _______ , _______ , _______ , _______ , _______   , _______ , SEARCH_EVERYWHERE ,
+             _______ , NB_STYLE , NB_HTML , NB_TS  , NB_SPEC, NB_FOLDER ,
+             _______ , _______ , _______ , _______ , NB_VS   , _______ , SEARCH_EVERYWHERE ,
              _______ , _______ , _______ , _______ , _______   ,
                                                  _______, _______,
                                                           _______,
                                         _______, _______, _______,
           // right hand
-             _______,  _______, _______, _______, _______, _______, _______,
+             _______,  _______, _______, _______, RUN_TASK, HIDE_ALL, _______,
              _______,  _______, _______, _______, _______, _______, _______,
                        _______, _______, _______, _______, _______, _______,
              _______,  _______, _______, _______, _______, _______, _______,
@@ -252,6 +258,46 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case NB_VS:
       if (record->event.pressed) {
         vs_file();
+      }
+      return false;
+      break;
+    case NB_HTML:
+      if (record->event.pressed) {
+        open_current_folder();
+        SEND_STRING("component.html");
+      }
+      return false;
+      break;
+    case NB_STYLE:
+      if (record->event.pressed) {
+        open_current_folder();
+        SEND_STRING("component.less");
+      }
+      return false;
+      break;
+    case NB_SPEC:
+      if (record->event.pressed) {
+        open_current_folder();
+        SEND_STRING("component.spec.ts");
+      }
+      return false;
+      break;
+    case NB_TS:
+      if (record->event.pressed) {
+        open_current_folder();
+        SEND_STRING("component.ts"SS_TAP(X_DOWN));
+      }
+      return false;
+      break;
+    case HIDE_ALL:
+      if (record->event.pressed) {
+        SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LSHIFT)SS_TAP(X_F12)SS_UP(X_LSHIFT)SS_UP(X_LCTRL));
+      }
+      return false;
+      break;
+    case RUN_TASK:
+      if (record->event.pressed) {
+        SEND_STRING(SS_DOWN(X_LALT)SS_TAP(X_F11)SS_UP(X_LALT));
       }
       return false;
       break;
