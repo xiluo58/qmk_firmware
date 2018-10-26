@@ -3,3 +3,4 @@
   See config.h options at https://docs.qmk.fm/#/config_options?id=the-configh-file
 */
 #define LEADER_TIMEOUT 1000
+#define FORCE_NKRO
