@@ -264,6 +264,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case NB_HTML:
       if (record->event.pressed) {
         open_current_folder();
+        MACRO_DELAY;
         SEND_STRING("component.html");
       }
       return false;
@@ -271,6 +272,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case NB_STYLE:
       if (record->event.pressed) {
         open_current_folder();
+        MACRO_DELAY;
         SEND_STRING("component.less");
       }
       return false;
@@ -278,6 +280,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case NB_SPEC:
       if (record->event.pressed) {
         open_current_folder();
+        MACRO_DELAY;
         SEND_STRING("component.spec.ts");
       }
       return false;
@@ -285,6 +288,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case NB_TS:
       if (record->event.pressed) {
         open_current_folder();
+        MACRO_DELAY;
         SEND_STRING("component.ts"SS_TAP(X_DOWN));
       }
       return false;
