@@ -29,7 +29,10 @@ enum custom_keycodes {
   NB_TS,
   RUN_TASK,
   HIDE_ALL,
+  TOGGLE_LOG
 };
+
+bool log_enable = false;
 
 /*
  all translate layer to be copied and modified
@@ -122,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                           _______,
                                         _______, _______, _______,
           // right hand
-             _______,  _______, _______, _______, _______, _______, _______,
+             TOGGLE_LOG,  _______, _______, _______, _______, _______, _______,
              _______,  _______, _______, _______, _______, _______, _______,
                        _______, _______, _______, _______, _______, _______,
              _______,  _______, _______, _______, _______, _______, _______,
@@ -222,6 +225,12 @@ void matrix_scan_user(void) {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (log_enable) {
+    uint8_t layer = biton32(layer_state);
+    uprintf ("{\"col\":%d, \"row\":%d, \"pressed\":%d, \"layer\":%d}\n", record->event.key.col,
+        record->event.key.row, record->event.pressed, layer);
+  }
+
   switch (keycode) {
     // dynamically generate these.
     case EPRM:
@@ -302,6 +311,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case RUN_TASK:
       if (record->event.pressed) {
         SEND_STRING(SS_DOWN(X_LALT)SS_TAP(X_F11)SS_UP(X_LALT));
+      }
+      return false;
+      break;
+    case TOGGLE_LOG:
+      if (record->event.pressed) {
+        ergodox_led_all_on();
+        wait_ms(100);
+        ergodox_led_all_off();
+        log_enable = !log_enable;
       }
       return false;
       break;
