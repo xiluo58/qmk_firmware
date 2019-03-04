@@ -73,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_RBRACKET , KC_Y             , KC_U    , KC_I     , KC_O      , KC_P     , KC_BSLASH ,
       KC_H        , KC_J             , KC_K    , KC_L     , KC_SCOLON , LT(IDEA, KC_QUOTE) ,
       KC_EQUAL    , KC_N             , KC_M    , KC_COMMA , KC_DOT    , KC_SLASH , KC_RSPC   ,
-      KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RCTRL , MO(SYMB)  ,
+      KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RCTRL , TT(SYMB)  ,
       KC_LEFT,KC_RIGHT,
       KC_UP,
       KC_DOWN,KC_DELETE, OSL(IDEA)
