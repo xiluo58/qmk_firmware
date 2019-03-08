@@ -6,10 +6,11 @@
 #include "action_layer.h"
 #include "version.h"
 
-#define BASE 0 // default layer
-#define SYMB 1 // symbols
-#define IDEA 2 // idea shortcuts (based on windows shortcuts)
-#define MAGIC 3 // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
+#define QWERTY 0 // default layer
+#define WORKMAN 1 // workman layout
+#define SYMB 2 // symbols
+#define IDEA 3 // idea shortcuts (based on windows shortcuts)
+#define MAGIC 4 // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
 
 #define MACRO_DELAY _delay_ms(50)
 #define SHORT_DELAY _delay_ms(10)
@@ -58,7 +59,7 @@ bool log_enable = false;
 */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [BASE] = LAYOUT_ergodox(
+  [QWERTY] = LAYOUT_ergodox(
       // left hand
       KC_GRAVE         , KC_1    , KC_2            , KC_3         , KC_4           , KC_5 , KC_HOME     ,
       KC_TAB           , KC_Q    , KC_W            , KC_E         , KC_R           , KC_T , KC_LBRACKET ,
@@ -76,84 +77,104 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RCTRL , TT(SYMB)  ,
       KC_LEFT,KC_RIGHT,
       KC_UP,
-      KC_DOWN,KC_DELETE, OSL(IDEA)
+      KC_DOWN,KC_DELETE, TG(WORKMAN)
       ),
 
-      [SYMB] = LAYOUT_ergodox(
-          // left hand
-          VRSN    , KC_F1   , KC_F2   , KC_F3   , KC_F4   , KC_F5   , KC_F6   ,
-          RESET   , KC_EXLM , KC_AT   , KC_LCBR , KC_RCBR , KC_PIPE , KC_TRNS ,
-          SOURCE  , KC_HASH , KC_DLR  , KC_LPRN , KC_RPRN , KC_GRV  ,
-          KC_TRNS , KC_PERC , KC_CIRC , KC_LBRC , KC_RBRC , KC_TILD , KC_TRNS ,
-          EPRM    , KC_TRNS , KC_TRNS , KC_TRNS , KC_TRNS ,
-          RGB_MOD,KC_TRNS,
-          KC_TRNS,
-          RGB_VAD,RGB_VAI,KC_TRNS,
-          // right hand
-          KC_F7   , KC_F8   , KC_F9 , KC_F10 , KC_F11  , KC_F12  , _______ ,
-          KC_TRNS , KC_UP   , KC_7  , KC_8   , KC_9    , KC_ASTR , _______ ,
-          KC_DOWN , KC_4    , KC_5  , KC_6   , KC_PLUS , KC_TRNS ,
-          KC_TRNS , KC_AMPR , KC_1  , KC_2   , KC_3    , KC_BSLS , KC_TRNS ,
-          KC_0 , KC_DOT  , _______  , KC_EQL , KC_TRNS ,
-          _______, _______,
-          KC_TRNS,
-          KC_TRNS, _______, _______
-          ),
+  [WORKMAN] = LAYOUT_ergodox(
+         _______, _______, _______, _______, _______, _______, _______,
+         _______, KC_Q, KC_D, KC_R, KC_W, KC_B, _______,
+         _______, KC_A, KC_S, KC_H, KC_T, KC_G,
+         _______, KC_Z, KC_X, KC_M, KC_C, KC_V, _______,
+         _______, _______, _______, _______, _______,
+                                             _______, _______,
+                                                      _______,
+                                    _______, _______, _______,
+      // right hand
+         _______,  _______, _______, _______, _______, _______, _______,
+         _______,  KC_J, KC_F, KC_U, KC_P, KC_SCOLON, _______,
+                   KC_Y, KC_N, KC_E, KC_O, KC_I, _______,
+         _______,  KC_K, KC_L, _______, _______, _______, _______,
+                            _______, _______, _______, _______, _______,
+         _______, _______,
+         _______,
+         _______, _______, _______
+  ),
 
-      /*
-        MAGIC_HOST_NKRO   Force N-Key Rollover (NKRO) on
-        MAGIC_UNHOST_NKRO   Force NKRO off
-        MAGIC_TOGGLE_NKRO   Turn NKRO on or off
-        MAGIC_NO_GUI    Disable the GUI keys (useful when gaming)
-        MAGIC_UNNO_GUI    Enable the GUI keys
-        MAGIC_SWAP_ALT_GUI  AG_SWAP Swap Alt and GUI on both sides (for macOS)
-        MAGIC_UNSWAP_ALT_GUI  AG_NORM Unswap Left Alt and Left GUI
-        MAGIC_TOGGLE_ALT_GUI  AG_TOGG Toggle Left Alt and GUI swap
-        MAGIC_SWAP_LALT_LGUI    Swap Left Alt and Left GUI
-        MAGIC_UNSWAP_LALT_LGUI    Unswap Left Alt and Left GUI
-        MAGIC_SWAP_RALT_RGUI    Swap Right Alt and Right GUI
-        MAGIC_UNSWAP_RALT_RGUI    Unswap Right Alt and Right GUI
-      */
-
-      [MAGIC] = LAYOUT_ergodox(
-             _______ , MAGIC_HOST_NKRO      , MAGIC_UNHOST_NKRO      , MAGIC_TOGGLE_NKRO    , MAGIC_NO_GUI           , MAGIC_UNNO_GUI , _______ ,
-             _______ , MAGIC_SWAP_ALT_GUI   , MAGIC_UNSWAP_ALT_GUI   , MAGIC_TOGGLE_ALT_GUI , _______                , _______        , _______ ,
-             _______ , MAGIC_SWAP_LALT_LGUI , MAGIC_UNSWAP_LALT_LGUI , MAGIC_SWAP_RALT_RGUI , MAGIC_UNSWAP_RALT_RGUI , _______        ,
-             _______ , _______              , _______                , _______              , _______                , _______        , _______ ,
-             _______ , _______              , _______                , _______              , _______                ,
-                                                 _______, _______,
-                                                          _______,
-                                        _______, _______, _______,
-          // right hand
-             TOGGLE_LOG,  _______, _______, _______, _______, _______, _______,
-             _______,  _______, _______, _______, _______, _______, _______,
-                       _______, _______, _______, _______, _______, _______,
-             _______,  _______, _______, _______, _______, _______, _______,
-                                _______, _______, _______, _______, _______,
-             _______, _______,
-             _______,
-             _______, _______, _______
+  [SYMB] = LAYOUT_ergodox(
+      // left hand
+      VRSN    , KC_F1   , KC_F2   , KC_F3   , KC_F4   , KC_F5   , KC_F6   ,
+      RESET   , KC_EXLM , KC_AT   , KC_LCBR , KC_RCBR , KC_PIPE , KC_TRNS ,
+      SOURCE  , KC_HASH , KC_DLR  , KC_LPRN , KC_RPRN , KC_GRV  ,
+      KC_TRNS , KC_PERC , KC_CIRC , KC_LBRC , KC_RBRC , KC_TILD , KC_TRNS ,
+      EPRM    , KC_TRNS , KC_TRNS , KC_TRNS , KC_TRNS ,
+      RGB_MOD,KC_TRNS,
+      KC_TRNS,
+      RGB_VAD,RGB_VAI,KC_TRNS,
+      // right hand
+      KC_F7   , KC_F8   , KC_F9 , KC_F10 , KC_F11  , KC_F12  , _______ ,
+      KC_TRNS , KC_UP   , KC_7  , KC_8   , KC_9    , KC_ASTR , _______ ,
+      KC_DOWN , KC_4    , KC_5  , KC_6   , KC_PLUS , KC_TRNS ,
+      KC_TRNS , KC_AMPR , KC_1  , KC_2   , KC_3    , KC_BSLS , KC_TRNS ,
+      KC_0 , KC_DOT  , _______  , KC_EQL , KC_TRNS ,
+      _______, _______,
+      KC_TRNS,
+      KC_TRNS, _______, _______
       ),
 
-      [IDEA] = LAYOUT_ergodox(
-             _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
-             _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
-             _______ , NB_STYLE , NB_HTML , NB_TS  , NB_SPEC, NB_FOLDER ,
-             _______ , _______ , _______ , _______ , NB_VS   , _______ , SEARCH_EVERYWHERE ,
-             _______ , _______ , _______ , _______ , _______   ,
-                                                 _______, _______,
-                                                          _______,
-                                        _______, _______, _______,
-          // right hand
-             _______,  _______, _______, _______, RUN_TASK, HIDE_ALL, _______,
-             _______,  _______, _______, _______, _______, _______, _______,
-                       _______, _______, _______, _______, _______, _______,
-             _______,  _______, _______, _______, _______, _______, _______,
-                                _______, _______, _______, _______, _______,
-             _______, _______,
-             _______,
-             _______, _______, _______
-      ),
+  /*
+    MAGIC_HOST_NKRO   Force N-Key Rollover (NKRO) on
+    MAGIC_UNHOST_NKRO   Force NKRO off
+    MAGIC_TOGGLE_NKRO   Turn NKRO on or off
+    MAGIC_NO_GUI    Disable the GUI keys (useful when gaming)
+    MAGIC_UNNO_GUI    Enable the GUI keys
+    MAGIC_SWAP_ALT_GUI  AG_SWAP Swap Alt and GUI on both sides (for macOS)
+    MAGIC_UNSWAP_ALT_GUI  AG_NORM Unswap Left Alt and Left GUI
+    MAGIC_TOGGLE_ALT_GUI  AG_TOGG Toggle Left Alt and GUI swap
+    MAGIC_SWAP_LALT_LGUI    Swap Left Alt and Left GUI
+    MAGIC_UNSWAP_LALT_LGUI    Unswap Left Alt and Left GUI
+    MAGIC_SWAP_RALT_RGUI    Swap Right Alt and Right GUI
+    MAGIC_UNSWAP_RALT_RGUI    Unswap Right Alt and Right GUI
+  */
+
+  [MAGIC] = LAYOUT_ergodox(
+         _______ , MAGIC_HOST_NKRO      , MAGIC_UNHOST_NKRO      , MAGIC_TOGGLE_NKRO    , MAGIC_NO_GUI           , MAGIC_UNNO_GUI , _______ ,
+         _______ , MAGIC_SWAP_ALT_GUI   , MAGIC_UNSWAP_ALT_GUI   , MAGIC_TOGGLE_ALT_GUI , _______                , _______        , _______ ,
+         _______ , MAGIC_SWAP_LALT_LGUI , MAGIC_UNSWAP_LALT_LGUI , MAGIC_SWAP_RALT_RGUI , MAGIC_UNSWAP_RALT_RGUI , _______        ,
+         _______ , _______              , _______                , _______              , _______                , _______        , _______ ,
+         _______ , _______              , _______                , _______              , _______                ,
+                                             _______, _______,
+                                                      _______,
+                                    _______, _______, _______,
+      // right hand
+         TOGGLE_LOG,  _______, _______, _______, _______, _______, _______,
+         _______,  _______, _______, _______, _______, _______, _______,
+                   _______, _______, _______, _______, _______, _______,
+         _______,  _______, _______, _______, _______, _______, _______,
+                            _______, _______, _______, _______, _______,
+         _______, _______,
+         _______,
+         _______, _______, _______
+  ),
+
+  [IDEA] = LAYOUT_ergodox(
+         _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
+         _______ , _______ , _______ , _______ , _______   , _______ , _______           ,
+         _______ , NB_STYLE , NB_HTML , NB_TS  , NB_SPEC, NB_FOLDER ,
+         _______ , _______ , _______ , _______ , NB_VS   , _______ , SEARCH_EVERYWHERE ,
+         _______ , _______ , _______ , _______ , _______   ,
+                                             _______, _______,
+                                                      _______,
+                                    _______, _______, _______,
+      // right hand
+         _______,  _______, _______, _______, RUN_TASK, HIDE_ALL, _______,
+         _______,  _______, _______, _______, _______, _______, _______,
+                   _______, _______, _______, _______, _______, _______,
+         _______,  _______, _______, _______, _______, _______, _______,
+                            _______, _______, _______, _______, _______,
+         _______, _______,
+         _______,
+         _______, _______, _______
+  ),
 };
 
 const uint16_t PROGMEM fn_actions[] = {
