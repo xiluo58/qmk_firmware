@@ -6,8 +6,8 @@
 #include "action_layer.h"
 #include "version.h"
 
-#define QWERTY 0 // default layer
-#define WORKMAN 1 // workman layout
+#define QWERTY 1 // qwerty layer
+#define WORKMAN 0 // workman layout
 #define SYMB 2 // symbols
 #define IDEA 3 // idea shortcuts (based on windows shortcuts)
 #define MAGIC 4 // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
@@ -59,6 +59,27 @@ bool log_enable = false;
 */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
+  [WORKMAN] = LAYOUT_ergodox(
+      // left hand
+      KC_GRAVE         , KC_1             , KC_2            , KC_3         , KC_4           , KC_5      , KC_HOME     ,
+      KC_TAB           , KC_Q             , KC_D            , KC_R         , KC_W           , KC_B      , KC_LBRACKET ,
+      CTL_T(KC_ESCAPE) , KC_A             , KC_S            , KC_H         , KC_T           , KC_G      ,
+      KC_LSPO          , KC_Z             , KC_X            , KC_M         , KC_C           , KC_V      , KC_MINUS    ,
+      MO(SYMB)         , KC_LEFT          , ALT_T(KC_RIGHT) , GUI_T(KC_UP) , MEH_T(KC_DOWN) ,
+      OSL(IDEA)        , MO(MAGIC)        ,
+      KC_PGUP          ,
+      KC_ENTER         , KC_LEAD          , KC_PGDOWN       ,
+      // right hand
+      KC_END           , KC_6             , KC_7            , KC_8         , KC_9           , KC_0      , KC_BSPACE   ,
+      KC_RBRACKET      , KC_J             , KC_F            , KC_U         , KC_P           , KC_SCOLON , KC_BSLASH   ,
+       KC_Y            , KC_N             , KC_E            , KC_O         , KC_I           , LT(IDEA   , KC_QUOTE)   ,
+      KC_EQUAL         , KC_K             , KC_L            , KC_COMMA     , KC_DOT         , KC_SLASH  , KC_RSPC     ,
+      KC_SPACE         , RGUI_T(KC_EQUAL) , KC_RALT         , KC_RCTRL     , TT(SYMB)       ,
+      KC_LEFT          , KC_RIGHT         ,
+      KC_UP            ,
+      KC_DOWN          , KC_DELETE        , TG(QWERTY)
+      ),
+
   [QWERTY] = LAYOUT_ergodox(
       // left hand
       KC_GRAVE         , KC_1    , KC_2            , KC_3         , KC_4           , KC_5 , KC_HOME     ,
@@ -77,28 +98,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RCTRL , TT(SYMB)  ,
       KC_LEFT,KC_RIGHT,
       KC_UP,
-      KC_DOWN,KC_DELETE, TG(WORKMAN)
+      KC_DOWN,KC_DELETE, _______
       ),
-
-  [WORKMAN] = LAYOUT_ergodox(
-         _______, _______, _______, _______, _______, _______, _______,
-         _______, KC_Q, KC_D, KC_R, KC_W, KC_B, _______,
-         _______, KC_A, KC_S, KC_H, KC_T, KC_G,
-         _______, KC_Z, KC_X, KC_M, KC_C, KC_V, _______,
-         _______, _______, _______, _______, _______,
-                                             _______, _______,
-                                                      _______,
-                                    _______, _______, _______,
-      // right hand
-         _______,  _______, _______, _______, _______, _______, _______,
-         _______,  KC_J, KC_F, KC_U, KC_P, KC_SCOLON, _______,
-                   KC_Y, KC_N, KC_E, KC_O, KC_I, _______,
-         _______,  KC_K, KC_L, _______, _______, _______, _______,
-                            _______, _______, _______, _______, _______,
-         _______, _______,
-         _______,
-         _______, _______, _______
-  ),
 
   [SYMB] = LAYOUT_ergodox(
       // left hand
