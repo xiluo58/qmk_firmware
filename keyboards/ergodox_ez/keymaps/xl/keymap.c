@@ -6,8 +6,8 @@
 #include "action_layer.h"
 #include "version.h"
 
-#define QWERTY 1 // qwerty layer
 #define WORKMAN 0 // workman layout
+#define QWERTY 1 // qwerty layer
 #define SYMB 2 // symbols
 #define IDEA 3 // idea shortcuts (based on windows shortcuts)
 #define MAGIC 4 // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
@@ -253,98 +253,61 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         record->event.key.row, record->event.pressed, layer);
   }
 
-  switch (keycode) {
-    // dynamically generate these.
-    case EPRM:
-      if (record->event.pressed) {
+  if (record->event.pressed) {
+    switch (keycode) {
+      // dynamically generate these.
+      case EPRM:
         eeconfig_init();
-      }
-      return false;
-      break;
-    case VRSN:
-      if (record->event.pressed) {
+        return false;
+      case VRSN:
         SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-      }
-      return false;
-      break;
-    case SOURCE:
-      if (record->event.pressed) {
+        return false;
+      case SOURCE:
         SEND_STRING ("https://github.com/xiluo58/qmk_firmware/blob/master/keyboards/ergodox_ez/keymaps/xl/keymap.c");
-      }
-      return false;
-      break;
-    // IDEA shortcuts
-    case SEARCH_EVERYWHERE:
-      if (record->event.pressed) {
+        return false;
+        // IDEA shortcuts
+      case SEARCH_EVERYWHERE:
         SEND_STRING (SS_TAP(X_LSHIFT)SS_TAP(X_LSHIFT));
-      }
-      return false;
-      break;
-    case NB_FOLDER:
-      if (record->event.pressed) {
+        return false;
+      case NB_FOLDER:
         open_current_folder();
-      }
-      return false;
-      break;
-    case NB_VS:
-      if (record->event.pressed) {
+        return false;
+      case NB_VS:
         vs_file();
-      }
-      return false;
-      break;
-    case NB_HTML:
-      if (record->event.pressed) {
+        return false;
+      case NB_HTML:
         open_current_folder();
         MACRO_DELAY;
         SEND_STRING("component.html");
-      }
-      return false;
-      break;
-    case NB_STYLE:
-      if (record->event.pressed) {
+        return false;
+      case NB_STYLE:
         open_current_folder();
         MACRO_DELAY;
         SEND_STRING("component.less");
-      }
-      return false;
-      break;
-    case NB_SPEC:
-      if (record->event.pressed) {
+        return false;
+      case NB_SPEC:
         open_current_folder();
         MACRO_DELAY;
         SEND_STRING("component.spec.ts");
-      }
-      return false;
-      break;
-    case NB_TS:
-      if (record->event.pressed) {
+        return false;
+      case NB_TS:
         open_current_folder();
         MACRO_DELAY;
         SEND_STRING("component.ts"SS_TAP(X_DOWN));
-      }
-      return false;
-      break;
-    case HIDE_ALL:
-      if (record->event.pressed) {
+        return false;
+      case HIDE_ALL:
         SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LSHIFT)SS_TAP(X_F12)SS_UP(X_LSHIFT)SS_UP(X_LCTRL));
-      }
-      return false;
-      break;
-    case RUN_TASK:
-      if (record->event.pressed) {
+        return false;
+      case RUN_TASK:
         SEND_STRING(SS_DOWN(X_LALT)SS_TAP(X_F11)SS_UP(X_LALT));
-      }
-      return false;
-      break;
-    case TOGGLE_LOG:
-      if (record->event.pressed) {
+        return false;
+      case TOGGLE_LOG:
         ergodox_led_all_on();
         wait_ms(100);
         ergodox_led_all_off();
         log_enable = !log_enable;
-      }
-      return false;
-      break;
+        return false;
+    }
   }
   return true;
 }
