@@ -141,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          _______ , MAGIC_HOST_NKRO      , MAGIC_UNHOST_NKRO      , MAGIC_TOGGLE_NKRO    , MAGIC_NO_GUI           , MAGIC_UNNO_GUI , _______ ,
          _______ , MAGIC_SWAP_ALT_GUI   , MAGIC_UNSWAP_ALT_GUI   , MAGIC_TOGGLE_ALT_GUI , _______                , _______        , _______ ,
          _______ , MAGIC_SWAP_LALT_LGUI , MAGIC_UNSWAP_LALT_LGUI , MAGIC_SWAP_RALT_RGUI , MAGIC_UNSWAP_RALT_RGUI , _______        ,
-         _______ , _______              , _______                , _______              , _______                , _______        , _______ ,
+         _______ , MAGIC_TOGGLE_CTL_GUI , _______                , _______              , _______                , _______        , _______ ,
          _______ , _______              , _______                , _______              , _______                ,
                                              _______, _______,
                                                       _______,
