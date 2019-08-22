@@ -75,6 +75,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef QWIIC_ENABLE
 #   include "qwiic.h"
 #endif
+#ifdef OLED_DRIVER_ENABLE
+    #include "oled_driver.h"
+#endif
+#ifdef VELOCIKEY_ENABLE
+  #include "velocikey.h"
+#endif
 
 #ifdef MATRIX_HAS_GHOST
 extern const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS];
@@ -124,10 +130,15 @@ static inline bool has_ghost_in_row(uint8_t row, matrix_row_t rowdata)
 #endif
 
 void disable_jtag(void) {
-// To use PORTF disable JTAG with writing JTD bit twice within four cycles.
-#if (defined(__AVR_AT90USB1286__) || defined(__AVR_AT90USB1287__) || defined(__AVR_ATmega32U4__))
+// To use PF4-7 (PC2-5 on ATmega32A), disable JTAG by writing JTD bit twice within four cycles.
+#if (defined(__AVR_AT90USB646__)  || defined(__AVR_AT90USB647__)  || \
+     defined(__AVR_AT90USB1286__) || defined(__AVR_AT90USB1287__) || \
+     defined(__AVR_ATmega16U4__)  || defined(__AVR_ATmega32U4__))
     MCUCR |= _BV(JTD);
     MCUCR |= _BV(JTD);
+#elif defined(__AVR_ATmega32A__)
+    MCUCSR |= _BV(JTD);
+    MCUCSR |= _BV(JTD);
 #endif
 }
 
@@ -178,7 +189,9 @@ void keyboard_post_init_kb(void) {
  * FIXME: needs doc
  */
 void keyboard_setup(void) {
+#ifndef NO_JTAG_DISABLE
     disable_jtag();
+#endif
     matrix_setup();
     keyboard_pre_init_kb();
 }
@@ -201,6 +214,9 @@ void keyboard_init(void) {
     matrix_init();
 #ifdef QWIIC_ENABLE
     qwiic_init();
+#endif
+#ifdef OLED_DRIVER_ENABLE
+    oled_init(OLED_ROTATION_0);
 #endif
 #ifdef PS2_MOUSE_ENABLE
     ps2_mouse_init();
@@ -259,7 +275,11 @@ void keyboard_task(void)
     uint8_t keys_processed = 0;
 #endif
 
+#if defined(OLED_DRIVER_ENABLE) && !defined(OLED_DISABLE_TIMEOUT)
+    uint8_t ret = matrix_scan();
+#else
     matrix_scan();
+#endif
 
     if (is_keyboard_master()) {
         for (uint8_t r = 0; r < MATRIX_ROWS; r++) {
@@ -303,6 +323,15 @@ MATRIX_LOOP_END:
     qwiic_task();
 #endif
 
+#ifdef OLED_DRIVER_ENABLE
+    oled_task();
+#ifndef OLED_DISABLE_TIMEOUT
+    // Wake up oled if user is using those fabulous keys!
+    if (ret)
+        oled_on();
+#endif
+#endif
+
 #ifdef MOUSEKEY_ENABLE
     // mousekey repeat & acceleration
     mousekey_task();
@@ -334,6 +363,10 @@ MATRIX_LOOP_END:
 
 #ifdef MIDI_ENABLE
     midi_task();
+#endif
+
+#ifdef VELOCIKEY_ENABLE
+    if (velocikey_enabled()) { velocikey_decelerate();  }
 #endif
 
     // update LED

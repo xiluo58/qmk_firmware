@@ -47,10 +47,8 @@
 /* COL2ROW, ROW2COL */
 //#define DIODE_DIRECTION COL2ROW
 
-// TODO: NOT WORKING - original kimera code seems to suggest B6 or C7 in backlight.c
-//                     however tracing seems to suggest this is not true (as C7 is RGB)
 #define BACKLIGHT_PIN B5
-#define BACKLIGHT_LEVELS 3
+#define BACKLIGHT_LEVELS 10
 // #define BACKLIGHT_BREATHING
 
 #define RGB_DI_PIN C7
@@ -77,7 +75,7 @@
 // #endif
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
-#define DEBOUNCING_DELAY 5
+#define DEBOUNCE 5
 
 /* define if matrix has ghost (lacks anti-ghosting diodes) */
 //#define MATRIX_HAS_GHOST
