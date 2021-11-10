@@ -247,11 +247,13 @@ void matrix_scan_user(void) {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  /*
   if (log_enable) {
     uint8_t layer = biton32(layer_state);
     uprintf ("%d,%d,%d,%d\n", record->event.key.col,
         record->event.key.row, record->event.pressed, layer);
   }
+  */
 
   if (record->event.pressed) {
     switch (keycode) {
