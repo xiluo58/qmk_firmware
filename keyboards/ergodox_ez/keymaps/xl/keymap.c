@@ -108,8 +108,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       SOURCE  , KC_HASH , KC_DLR  , KC_LPRN , KC_RPRN , KC_GRV  ,
       KC_TRNS , KC_PERC , KC_CIRC , KC_LBRC , KC_RBRC , KC_TILD , KC_TRNS ,
       EPRM    , KC_TRNS , KC_TRNS , KC_TRNS , KC_TRNS ,
-      RGB_MOD,KC_TRNS,
-      KC_TRNS,
+      KC_MPRV , KC_MNXT,
+      KC_MPLY,
       RGB_VAD,RGB_VAI,KC_TRNS,
       // right hand
       KC_F7   , KC_F8   , KC_F9 , KC_F10 , KC_F11  , KC_F12  , _______ ,
