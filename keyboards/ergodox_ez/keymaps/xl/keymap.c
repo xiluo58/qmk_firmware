@@ -6,14 +6,16 @@
 #include "action_layer.h"
 #include "version.h"
 
-#define WORKMAN 0 // workman layout
-#define QWERTY 1 // qwerty layer
-#define SYMB 2 // symbols
-#define IDEA 3 // idea shortcuts (based on windows shortcuts)
-#define MAGIC 4 // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
-
 #define MACRO_DELAY _delay_ms(50)
 #define SHORT_DELAY _delay_ms(10)
+
+enum layers {
+    WORKMAN,  // workman layout
+    QWERTY,   // qwerty layer
+    SYMB,     // symbols
+    IDEA,     // idea shortcuts (based on windows shortcuts)
+    MAGIC,    // layer of bootmagic, keep it biggest to avoid other layer has transparent key and therefore key in this layer is pressed by mistake
+};
 
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
@@ -62,19 +64,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [WORKMAN] = LAYOUT_ergodox(
       // left hand
       KC_GRAVE         , KC_1             , KC_2            , KC_3         , KC_4           , KC_5      , KC_HOME     ,
-      KC_TAB           , KC_Q             , KC_D            , KC_R         , KC_W           , KC_B      , KC_LBRACKET ,
+      KC_TAB           , KC_Q             , KC_D            , KC_R         , KC_W           , KC_B      , KC_LEFT_BRACKET ,
       CTL_T(KC_ESCAPE) , KC_A             , KC_S            , KC_H         , KC_T           , KC_G      ,
-      KC_LSPO          , KC_Z             , KC_X            , KC_M         , KC_C           , KC_V      , KC_MINUS    ,
+      SC_LSPO          , KC_Z             , KC_X            , KC_M         , KC_C           , KC_V      , KC_MINUS    ,
       MO(SYMB)         , KC_LEFT          , ALT_T(KC_RIGHT) , GUI_T(KC_UP) , MEH_T(KC_DOWN) ,
       OSL(IDEA)        , MO(MAGIC)        ,
       KC_PGUP          ,
-      KC_ENTER         , KC_LEAD          , KC_PGDOWN       ,
+      KC_ENTER         , QK_LEAD          , KC_PGDN       ,
       // right hand
-      KC_END           , KC_6             , KC_7            , KC_8         , KC_9           , KC_0      , KC_BSPACE   ,
-      KC_RBRACKET      , KC_J             , KC_F            , KC_U         , KC_P           , KC_SCOLON , KC_BSLASH   ,
+      KC_END           , KC_6             , KC_7            , KC_8         , KC_9           , KC_0      , KC_BACKSPACE   ,
+      KC_RIGHT_BRACKET , KC_J             , KC_F            , KC_U         , KC_P           , KC_SEMICOLON , KC_BACKSLASH   ,
        KC_Y            , KC_N             , KC_E            , KC_O         , KC_I           , LT(IDEA   , KC_QUOTE)   ,
-      KC_EQUAL         , KC_K             , KC_L            , KC_COMMA     , KC_DOT         , KC_SLASH  , KC_RSPC     ,
-      KC_SPACE         , RGUI_T(KC_EQUAL) , KC_RALT         , KC_RCTRL     , TT(SYMB)       ,
+      KC_EQUAL         , KC_K             , KC_L            , KC_COMMA     , KC_DOT         , KC_SLASH  , SC_RSPC     ,
+      KC_SPACE         , RGUI_T(KC_EQUAL) , KC_RALT         , KC_RIGHT_CTRL, TT(SYMB)       ,
       KC_LEFT          , KC_RIGHT         ,
       KC_UP            ,
       KC_DOWN          , KC_DELETE        , TG(QWERTY)
@@ -83,19 +85,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [QWERTY] = LAYOUT_ergodox(
       // left hand
       KC_GRAVE         , KC_1    , KC_2            , KC_3         , KC_4           , KC_5 , KC_HOME     ,
-      KC_TAB           , KC_Q    , KC_W            , KC_E         , KC_R           , KC_T , KC_LBRACKET ,
+      KC_TAB           , KC_Q    , KC_W            , KC_E         , KC_R           , KC_T , KC_LEFT_BRACKET ,
       CTL_T(KC_ESCAPE) , KC_A    , KC_S            , KC_D         , KC_F           , KC_G ,
-      KC_LSPO          , KC_Z    , KC_X            , KC_C         , KC_V           , KC_B , KC_MINUS    ,
+      SC_LSPO          , KC_Z    , KC_X            , KC_C         , KC_V           , KC_B , KC_MINUS    ,
       MO(SYMB)         , KC_LEFT , ALT_T(KC_RIGHT) , GUI_T(KC_UP) , MEH_T(KC_DOWN) ,
       OSL(IDEA), MO(MAGIC),
       KC_PGUP,
-      KC_ENTER,	KC_LEAD,	KC_PGDOWN,
+      KC_ENTER,	QK_LEAD,	KC_PAGE_DOWN,
       // right hand
-      KC_END      , KC_6             , KC_7    , KC_8     , KC_9      , KC_0     , KC_BSPACE ,
-      KC_RBRACKET , KC_Y             , KC_U    , KC_I     , KC_O      , KC_P     , KC_BSLASH ,
-      KC_H        , KC_J             , KC_K    , KC_L     , KC_SCOLON , LT(IDEA, KC_QUOTE) ,
-      KC_EQUAL    , KC_N             , KC_M    , KC_COMMA , KC_DOT    , KC_SLASH , KC_RSPC   ,
-      KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RCTRL , TT(SYMB)  ,
+      KC_END      , KC_6             , KC_7    , KC_8     , KC_9      , KC_0     , KC_BACKSPACE ,
+      KC_RIGHT_BRACKET , KC_Y        , KC_U    , KC_I     , KC_O      , KC_P     , KC_BACKSLASH ,
+      KC_H        , KC_J             , KC_K    , KC_L     , KC_SEMICOLON , LT(IDEA, KC_QUOTE) ,
+      KC_EQUAL    , KC_N             , KC_M    , KC_COMMA , KC_DOT    , KC_SLASH , SC_RSPC   ,
+      KC_SPACE    , RGUI_T(KC_EQUAL) , KC_RALT , KC_RIGHT_CTRL , TT(SYMB)  ,
       KC_LEFT,KC_RIGHT,
       KC_UP,
       KC_DOWN,KC_DELETE, _______
@@ -104,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [SYMB] = LAYOUT_ergodox(
       // left hand
       VRSN    , KC_F1   , KC_F2   , KC_F3   , KC_F4   , KC_F5   , KC_F6   ,
-      RESET   , KC_EXLM , KC_AT   , KC_LCBR , KC_RCBR , KC_PIPE , KC_TRNS ,
+      QK_BOOT, KC_EXLM , KC_AT   , KC_LCBR , KC_RCBR , KC_PIPE , KC_TRNS ,
       SOURCE  , KC_HASH , KC_DLR  , KC_LPRN , KC_RPRN , KC_GRV  ,
       KC_TRNS , KC_PERC , KC_CIRC , KC_LBRC , KC_RBRC , KC_TILD , KC_TRNS ,
       EPRM    , KC_TRNS , KC_TRNS , KC_TRNS , KC_TRNS ,
@@ -182,8 +184,10 @@ const uint16_t PROGMEM fn_actions[] = {
   [1] = ACTION_LAYER_TAP_TOGGLE(1)
 };
 
+/*
 void matrix_init_user(void) {
 };
+*/
 
 // idea shortcuts that opens the folder of current file in navigation bar
 void open_current_folder(void) {
@@ -193,7 +197,7 @@ void open_current_folder(void) {
 }
 
 void copy_relative_path(void) {
-  SEND_STRING(SS_LCTRL(SS_LALT(SS_LSFT("c"))));
+  SEND_STRING(SS_LCTL(SS_LALT(SS_LSFT("c"))));
 }
 
 // open file, file path is copied to clipboard
@@ -203,7 +207,7 @@ void open_file_clipboard(void) {
   MACRO_DELAY;
   SEND_STRING("e ");
   MACRO_DELAY;
-  SEND_STRING(SS_LCTRL("v"));
+  SEND_STRING(SS_LCTL("v"));
   MACRO_DELAY;
   SEND_STRING(SS_TAP(X_ENTER));
 }
@@ -214,21 +218,18 @@ void vs_file(void) {
   MACRO_DELAY;
   SEND_STRING(SS_TAP(X_ESCAPE));
   MACRO_DELAY;
-  SEND_STRING(SS_LCTRL("h"));
+  SEND_STRING(SS_LCTL("h"));
   open_file_clipboard();
 }
 
 // Leader key
-LEADER_EXTERNS();
+void leader_start_user(void) {
 
-void matrix_scan_user(void) {
-  LEADER_DICTIONARY() {
-    leading = false;
-    leader_end();
+}
 
-    SEQ_ONE_KEY(KC_S) {
+void leader_end_user(void) {
+  if (leader_sequence_one_key(KC_S)) {
       vs_file();
-    }
   }
 }
 
@@ -256,7 +257,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
         // IDEA shortcuts
       case SEARCH_EVERYWHERE:
-        SEND_STRING (SS_TAP(X_LSHIFT)SS_TAP(X_LSHIFT));
+        SEND_STRING (SS_TAP(X_LEFT_SHIFT)SS_TAP(X_LEFT_SHIFT));
         return false;
       case NB_FOLDER:
         open_current_folder();
@@ -285,10 +286,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING("component.ts"SS_TAP(X_DOWN));
         return false;
       case HIDE_ALL:
-        SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LSHIFT)SS_TAP(X_F12)SS_UP(X_LSHIFT)SS_UP(X_LCTRL));
+        SEND_STRING(SS_DOWN(X_LEFT_CTRL)SS_DOWN(X_LEFT_SHIFT)SS_TAP(X_F12)SS_UP(X_LEFT_SHIFT)SS_UP(X_LEFT_CTRL));
         return false;
       case RUN_TASK:
-        SEND_STRING(SS_DOWN(X_LALT)SS_TAP(X_F11)SS_UP(X_LALT));
+        SEND_STRING(SS_DOWN(X_LEFT_ALT)SS_TAP(X_F11)SS_UP(X_LEFT_ALT));
         return false;
       case TOGGLE_LOG:
         ergodox_led_all_on();
@@ -301,9 +302,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-uint32_t layer_state_set_user(uint32_t state) {
+layer_state_t layer_state_set_user(layer_state_t state) {
 
-  uint8_t layer = biton32(state);
+  uint8_t layer = get_highest_layer(state);
 
   ergodox_board_led_off();
   ergodox_right_led_1_off();
